@@ -1,0 +1,2 @@
+
+require('./modules/alertMaster/alertRoute');

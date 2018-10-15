@@ -1,0 +1,11 @@
+{
+    "heartbeat": true,
+    "PORT": 3000,
+    "databaseSettings": {
+        "host": "10.0.10.43",
+        "user": "UATUser",
+        "password": "UAT123User",
+        "database": "PBCroma",
+        "mysqlPORT": ""
+    }
+}
