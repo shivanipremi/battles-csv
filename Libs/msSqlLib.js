@@ -1,5 +1,6 @@
 
-const sql = require('mssql');
+const sql 
+// = require('mssql');
 
 var db_config = {
   host: process.env.MYSQL_HOST || config.get('databaseSettings.host'),
