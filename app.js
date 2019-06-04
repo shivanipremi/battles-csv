@@ -1,7 +1,6 @@
 
 const express = require('express');
 const mongoose = require('mongoose')
-const path = require('path');
 const jwt = require("jsonwebtoken")
 const bodyParser = require('body-parser');
 config = require('config');
@@ -42,6 +41,8 @@ global.app = app;
 app.use(async function(req,res,next){
     console.log("in the middleware====")
     try{
+    console.log("check request here-=-===", req.headers);
+    if(!token) next();
     const token = req.headers.authorization.split(" ")[1]
     console.log("token====--", token)
     console.log("key.token key", key.tokenKey)
@@ -55,10 +56,7 @@ app.use(async function(req,res,next){
                     next()
             } else {
                 next();
-            }
-                    
-                
-            
+            } 
         } else {
             console.log("next herer==")
            next()

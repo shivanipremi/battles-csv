@@ -60,6 +60,7 @@ const login_user = async function(req, res) {
       if(isMatch){
         
           var token=jwt.sign({userId:userExist._id},key.tokenKey);
+          console.log("tokenn here-===", token)    
           res.status(200).json({
               userId:user.id,
               username:user.username,
