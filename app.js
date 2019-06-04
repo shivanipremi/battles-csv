@@ -2,8 +2,13 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const path = require('path');
+const jwt = require("jsonwebtoken")
 const bodyParser = require('body-parser');
 config = require('config');
+key = {
+    tokenKey : 'abbcdeferekrjkejr'
+}
+global.key = key;
 
 
 const http = require('http');
@@ -27,8 +32,43 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+const user = require("./modules/user/userModel")
 
 global.app = app;
+app.use(async function(req,res,next){
+    console.log("in the middleware====")
+    try{
+    const token = req.headers.authorization.split(" ")[1]
+    console.log("token====--", token)
+    console.log("key.token key", key.tokenKey)
+   let payload = await jwt.verify(token, key.tokenKey) 
+        console.log("payload",payload)
+        if (payload) {
+            console.log("payload====")
+            let data = await user.findById(payload.userId)
+            if(data) {
+                req.user=data;
+                    next()
+            } else {
+                next();
+            }
+                    
+                
+            
+        } else {
+            console.log("next herer==")
+           next()
+        }
+    
+}catch(e){
+    console.log("error here==", e)
+    next()
+}
+})
 
 
 const startServer =  http.createServer(app).listen(app.get('port'), function () {

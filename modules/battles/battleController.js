@@ -133,6 +133,7 @@ const import_csv = async function(req, res) {
 };
 const count_items = async function(req, res) {
     try {
+      console.log("Req user ere==", req.user)
         let count = await Battle.count()
         console.log("count is====", count)
         res.send({
