@@ -1,2 +1,2 @@
 
-require('./modules/alertMaster/alertRoute');
+require("./modules/battles/battleRoute")

@@ -1,3 +1,7 @@
+'use strict';
+
+const Joi = require("joi");
+
 const add_item = Joi.object().keys({
     alert_title: Joi.string().required(),
     query_type: Joi.string().optional(),

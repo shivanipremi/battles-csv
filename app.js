@@ -1,50 +1,15 @@
 
-// performance monitoring with New Relic for live environment
-if (process.env.NODE_ENV == 'live') {
-    require('newrelic');
-}
-
-// Configuration setup with config module
-process.env.NODE_CONFIG_DIR = 'config/';
-
-// Moving NODE_APP_INSTANCE aside during configuration loading
-var app_instance = process.argv.NODE_APP_INSTANCE;
-process.argv.NODE_APP_INSTANCE = "";
-
+const express = require('express');
+const mongoose = require('mongoose')
+const path = require('path');
+const bodyParser = require('body-parser');
 config = require('config');
 
-// PMX allows you to create advanced interactions with PM2 and Keymetrics.io
 
-// Moduler dependencies 
-var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
-var multipart = require('connect-multiparty');
-var MongoClient = require('mongodb').MongoClient;
-var http = require('http');
-
-
-var multipartMiddleware = multipart();
-process.argv.NODE_APP_INSTANCE = app_instance;
-
-// error tracking with Sentry raven
-var client = ''
-
-
-
-msSqlLib = require('./Libs/msSqlLib');
-
-var app = express();
-
+const http = require('http');
+const app = express();
 
 app.set('port', process.env.PORT || config.get('PORT'));
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(bodyParser.json({ limit: '50mb' }));
-
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
@@ -66,18 +31,19 @@ app.use(function (req, res, next) {
 global.app = app;
 
 
-var startServer =  http.createServer(app).listen(app.get('port'), function () {
+const startServer =  http.createServer(app).listen(app.get('port'), function () {
     console.log('Server connected on port :', app.get('port'))
     startInitialProcess();
 });
 
-
+require('./index')
 async function startInitialProcess() {
-    setTimeout((async () => {
-        console.log('conenction is', connection)
-        const result = await connection.query`select * from alertmaster`
-        console.dir(result)
-    }), 9000);
+mongoose.connect("mongodb://localhost:27017/battles");
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:::::"));
+db.once("open", function callback() {
+  console.log("mongoose connection is open");
+});
 }
 
 process.on('message', function (message) {
