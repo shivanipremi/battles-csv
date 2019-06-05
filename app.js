@@ -25,6 +25,7 @@ app.use(function (req, res, next) {
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
+
     // webVersion header for each request
     // res.setHeader('reversions', config.get('webVersion'));
 
@@ -37,19 +38,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const user = require("./modules/user/userModel")
 
+
 global.app = app;
 app.use(async function(req,res,next){
-    console.log("in the middleware====")
     try{
-    console.log("check request here-=-===", req.headers);
-    if(!token) next();
+    if (req.path == '/api/register_user' || req.path == '/api/auth/signin') return next();
+    if(!req.headers.authorization) return res.send({status : 400, error : 'Authorization is required'})
     const token = req.headers.authorization.split(" ")[1]
-    console.log("token====--", token)
-    console.log("key.token key", key.tokenKey)
    let payload = await jwt.verify(token, key.tokenKey) 
-        console.log("payload",payload)
         if (payload) {
-            console.log("payload====")
             let data = await user.findById(payload.userId)
             if(data) {
                 req.user=data;
@@ -58,16 +55,13 @@ app.use(async function(req,res,next){
                 next();
             } 
         } else {
-            console.log("next herer==")
            next()
         }
     
 }catch(e){
-    console.log("error here==", e)
     next()
 }
 })
-
 
 const startServer =  http.createServer(app).listen(app.get('port'), function () {
     console.log('Server connected on port :', app.get('port'))
@@ -77,6 +71,10 @@ const startServer =  http.createServer(app).listen(app.get('port'), function () 
 require('./index')
 async function startInitialProcess() {
 mongoose.connect("mongodb://localhost:27017/battles");
+// mongoose.connect("mongodb+srv://battles:@cluster0-dkuwq.mongodb.net/test?retryWrites=true&w=majority"
+//    )
+
+// mongoose.connect("mongodb+srv://user:meharkri@cluster0-am3sv.mongodb.net/test?retryWrites=true&w=majority", options)
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:::::"));
 db.once("open", function callback() {

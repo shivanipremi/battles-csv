@@ -22,6 +22,8 @@ app.post('/api/import_csv',multipartMiddleware, controller.import_csv);
 app.get('/api/count',proctectRoute, controller.count_items);  
 app.get('/api/list',proctectRoute, controller.list_items);  
 app.get('/api/search',proctectRoute, controller.search_items);  
+app.get('/api/stats',proctectRoute, controller.item_stats);  
+
 
 
 

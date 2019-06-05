@@ -2,12 +2,13 @@
 
 const Joi = require("joi");
 
-const add_item = Joi.object().keys({
-    alert_title: Joi.string().required(),
-    query_type: Joi.string().optional(),
-    observer: Joi.string().required(),
-    to_mail: Joi.string().optional(),
-    to_mobile: Joi.string().required()
+const import_csv = Joi.object().keys({
+   csv_file :  Joi.any()
+                .meta({swaggerType: 'file'})
+                .optional()
+                .allow('')
+                .description('image file'),
+                   
 });
 
-module.exports.add_item = add_item
+module.exports.import_csv = import_csv
