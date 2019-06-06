@@ -70,10 +70,10 @@ const startServer =  http.createServer(app).listen(app.get('port'), function () 
 
 require('./index')
 async function startInitialProcess() {
-mongoose.connect("mongodb://localhost:27017/battles");
+// mongoose.connect("mongodb://localhost:27017/battles");
 // mongoose.connect("mongodb+srv://battles:@cluster0-dkuwq.mongodb.net/test?retryWrites=true&w=majority"
 //    )
-
+mongoose.connect("mongodb+srv://battles:meharkri@cluster0-hym5r.mongodb.net/test?retryWrites=true&w=majority")
 // mongoose.connect("mongodb+srv://user:meharkri@cluster0-am3sv.mongodb.net/test?retryWrites=true&w=majority", options)
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:::::"));
@@ -91,3 +91,12 @@ process.on('message', function (message) {
         }, 15000);
     }
 });
+
+process
+  .on('unhandledRejection', (reason, p) => {
+    console.error(reason, 'Unhandled Rejection at Promise', p);
+  })
+  .on('uncaughtException', err => {
+    console.error(err, 'Uncaught Exception thrown');
+    process.exit(1);
+  });
